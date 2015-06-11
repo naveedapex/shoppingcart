@@ -13,6 +13,8 @@ var express = require('express'),
   http = require('http'),
   fs=require('fs'),
   path = require('path');
+var mongoose=require('mongoose');
+mongoose.connect('mongodb://localhost/cart');
 
 var app = module.exports = express();
 
@@ -48,21 +50,16 @@ if (env === 'production') {
  */
 
 // serve index and view partials
-app.get('/', function(req, res) {
-  //  var username=req.session&& req.session.currentUser? req.session.currentUser.username:null;
-  //  res.render('index', {user:username});
-  console.log('../'+__dirname);
- res.sendfile('main.html',{'root':__dirname + '/public'});
- //res.send(200);
-});
+
 //app.get('/partials/:name', routes.partials);
 
 // JSON API
 //app.get('/api/name', api.name);
 
 // redirect all others to the index (HTML5 history)
-//app.get('*', routes.index);
+//app.get('*', routes.
 
+require(__dirname+'/app/models/cartModel.js');
 var routes_path = __dirname + '/app/routes';
 var walk = function(path) {
     fs.readdirSync(path).forEach(function(file) {

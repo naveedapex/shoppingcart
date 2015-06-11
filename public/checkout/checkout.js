@@ -4,7 +4,7 @@ angular.module('checkout', ['ngRoute'])
 
 .config(['$routeProvider', function($routeProvider) {
   $routeProvider.when('/checkout', {
-    templateUrl: 'public/checkout/checkout.html',
+    templateUrl: '/checkout/checkout.html',
     controller: 'CheckoutCtrl'
   });
 }])
