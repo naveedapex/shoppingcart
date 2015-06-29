@@ -46,7 +46,7 @@ exports.getOrders=function(req,res){
 
 };
 
-exports.addOrder=function(re,res){
+exports.addOrder=function(req,res){
 
     var orderShipping= new Address(req.body.updatedShipping);
     var orderBilling=  new Billing (req.body.updatedBilling);

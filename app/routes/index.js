@@ -21,10 +21,11 @@ module.exports = function(app) {
         customers=require('../controllers/customerCtrl');
 
      app.get('/',index.render);
-    app.get('/products',products)
-    app.get('/orders',orders);
-    app.post('/orders',orders);
-    app.get('/customers',customers)
+    app.get('/products',products.getProducts)
+    app.get('/orders',orders.getOrders);
+    app.post('/orders',orders.addOrder);
+    app.get('/customers',customers.getCustomer)
+    app.get('/fill', customers.fillProducts)
     app.post('/customers/update/shipping',customers.updateShipping);
     app.post('/customers/update/billing',customers.updateBilling);
     app.post('/customers/update/cart',customers.updateCart);
