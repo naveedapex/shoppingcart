@@ -11,15 +11,16 @@
         <div id="title">My Store</div>
         <div id="bar">
         <span class="orders"
-              ng-click="setContent('orders.html')">Orders</span>
-        <span id="cartLink" ng-click="setContent('cart.html')">
+              ng-click="setContent('orders')">Orders</span>
+        <span id="cartLink" ng-click="setContent('cart')">
             {{customer.cart.length}} items
             <img src="/images/cart.png" />
         </span>
         </div>
     </div>
     <div id="main">
-        <div ng-include="content"></div>
+        <!--<div ng-include="content"></div>-->
+        <ng-view></ng-view>
 
     </div>
 </div>

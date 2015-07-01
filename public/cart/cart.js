@@ -4,12 +4,34 @@ angular.module('cart', ['ngRoute'])
 
 .config(['$routeProvider', function($routeProvider) {
   $routeProvider.when('/cart', {
-    templateUrl: '/cart/cart.html',
+    templateUrl: '/static/cart.html',
     controller: 'CartCtrl'
-  });
+  }).when('/billing', {
+      templateUrl: '/static/billing.html',
+      controller: 'CartCtrl'
+  }).when('/orders', {
+          templateUrl: '/static/orders.html',
+          controller: 'CartCtrl'
+      })
+      .when('/product', {
+          templateUrl: '/static/product.html',
+          controller: 'CartCtrl'
+      })
+      .when('/products', {
+          templateUrl: '/static/products.html',
+          controller: 'CartCtrl'
+      })
+      .when('/review', {
+          templateUrl: '/static/review.html',
+          controller: 'CartCtrl'
+      })
+      .when('/shipping', {
+          templateUrl: '/static/shipping.html',
+          controller: 'CartCtrl'
+      })
 }])
 
-.controller('CartCtrl', ['$scope', '$http', '$window',function($scope, $http, $window) {
+.controller('CartCtrl', ['$scope', '$http', '$window','$location',function($scope, $http, $window,$location) {
 
       $scope.months=[1,2,3,4,5,6,7,8,9,10,11,12];
       $scope.years=[2014,2015,2016,2017,2018,2019,2020];
@@ -45,12 +67,14 @@ angular.module('cart', ['ngRoute'])
           })
 
         $scope.setContent=function(filename){
-            $scope.content='/static/'+filename;
+         //   $scope.content='/static/'+filename;
+            $location.path('/'+filename)
         }
 
         $scope.setProduct=function(productId){
             $scope.product=this.product;
-            $scope.content = '/static/product.html';
+            $location.path('/product')
+          //  $scope.content = '/static/product.html';
         }
 
         $scope.cartTotal=function(){
@@ -80,7 +104,7 @@ angular.module('cart', ['ngRoute'])
             $http.post('/customers/update/cart',{updatedCart:$scope.customer.cart})
                 .success(function(data,status,headers,config){
                     $scope.content='/static/cart.html'
-
+                    $location.path('/cart')
                 })
                 .error(function(data,status,headers,config){
                $window.alert(data);
@@ -98,8 +122,8 @@ angular.module('cart', ['ngRoute'])
             }
             $http.post('/customers/update/cart',{updatedCart:$scope.customer.cart})
                 .success(function(data,status,headers,config){
-                    $scope.content='/static/cart.html'
-
+               //     $scope.content='/static/cart.html'
+                    $location.path('/cart')
                 })
                 .error(function(data,status,headers,config){
                     $window.alert(data);
@@ -109,8 +133,8 @@ angular.module('cart', ['ngRoute'])
         $scope.checkout=function(){
             $http.post('/customers/update/cart',{updatedCart:$scope.customer.cart})
                 .success(function(data,status,headers,config){
-                    $scope.content='/static/shipping.html'
-
+                  //  $scope.content='/static/shipping.html'
+                    $location.path('/shipping')
                 })
                 .error(function(data,status,headers,config){
                     $window.alert(data);
@@ -122,8 +146,8 @@ angular.module('cart', ['ngRoute'])
         $scope.setShipping=function(){
             $http.post('/customers/update/shipping',{updatedShipping:$scope.customer.shipping[0]})
                 .success(function(data,status,headers,config){
-                    $scope.content='/static/billing.html'
-
+                //    $scope.content='/static/billing.html'
+                    $location.path('/billing')
                 })
                 .error(function(data,status,headers,config){
                     $window.alert(data);
@@ -135,8 +159,8 @@ angular.module('cart', ['ngRoute'])
 
             $http.post('/customers/update/billing',{updatedCart:$scope.customer.shipping[0], ccv:ccv})
                 .success(function(data,status,headers,config){
-                    $scope.content='/static/review.html'
-
+                  //  $scope.content='/static/review.html'
+                    $location.path('/review')
                 })
                 .error(function(data,status,headers,config){
                     $window.alert(data);
@@ -157,8 +181,8 @@ angular.module('cart', ['ngRoute'])
                     $scope.customer.cart=[];
                    $http.get('/orders').success(function(data,status,headers,config){
                        $scope.orders=data;
-                       $scope.content='/static/orders.html';
-
+                     //  $scope.content='/static/orders.html';
+                       $location.path('/orders')
                    }).error(function(data,status,headers,config){
                         $scope.orders=[];
                    })
