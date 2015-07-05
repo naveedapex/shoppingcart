@@ -9,6 +9,7 @@
     "jade": "~0.31.2",
     "method-override": "^1.0.0",
     "morgan": "^1.0.0",
-    "mongoose":"*"
+    "mongoose":"*",
+    "jsonwebtoken":"*"
   }
 }

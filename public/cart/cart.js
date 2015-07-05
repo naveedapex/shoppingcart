@@ -1,8 +1,26 @@
 'use strict';
 
-angular.module('cart', ['ngRoute'])
+angular.module('cart', ['ngRoute','ngStorage'])
 
-.config(['$routeProvider', function($routeProvider) {
+.config(['$routeProvider','$httpProvider', function($routeProvider,$httpProvider) {
+        $httpProvider.interceptors.push(['$q', '$location', '$localStorage', function($q, $location, $localStorage) {
+            return {
+                'request': function (config) {
+                    config.headers = config.headers || {};
+                    if ($localStorage.token) {
+                        config.headers.Authorization = 'Bearer ' + $localStorage.token;
+                    }
+                    return config;
+                },
+                'responseError': function(response) {
+                    if(response.status === 401 || response.status === 403) {
+                        $location.path('/signin');
+                    }
+                    return $q.reject(response);
+                }
+            };
+        }]);
+
   $routeProvider.when('/cart', {
     templateUrl: '/static/cart.html',
     controller: 'CartCtrl'
@@ -29,9 +47,65 @@ angular.module('cart', ['ngRoute'])
           templateUrl: '/static/shipping.html',
           controller: 'CartCtrl'
       })
+      .when('/login', {
+          templateUrl: '/static/login.html',
+          controller: 'CartCtrl'
+      })
 }])
+    .factory('Main', ['$http', '$localStorage', function($http, $localStorage){
+        var baseUrl = "your_service_url";
+        function changeUser(user) {
+            angular.extend(currentUser, user);
+        }
 
-.controller('CartCtrl', ['$scope', '$http', '$window','$location',function($scope, $http, $window,$location) {
+        function urlBase64Decode(str) {
+            var output = str.replace('-', '+').replace('_', '/');
+            switch (output.length % 4) {
+                case 0:
+                    break;
+                case 2:
+                    output += '==';
+                    break;
+                case 3:
+                    output += '=';
+                    break;
+                default:
+                    throw 'Illegal base64url string!';
+            }
+            return window.atob(output);
+        }
+
+        function getUserFromToken() {
+            var token = $localStorage.token;
+            var user = {};
+            if (typeof token !== 'undefined') {
+                var encoded = token.split('.')[1];
+                user = JSON.parse(urlBase64Decode(encoded));
+            }
+            return user;
+        }
+
+   //     var currentUser = getUserFromToken();
+
+        return {
+            save: function(data, success, error) {
+                $http.post('/signin', data).success(success).error(error)
+            },
+            signin: function(data, success, error) {
+                $http.post('/authenticate', data).success(success).error(error)
+            },
+            me: function(success, error) {
+                $http.get('/me').success(success).error(error)
+            },
+            logout: function(success) {
+          //      changeUser({});
+                delete $localStorage.token;
+                success();
+            }
+        };
+    }
+    ])
+.controller('CartCtrl', ['$scope', '$http', '$window','$location','$localStorage', 'Main',function($scope, $http, $window,$location,$localStorage, Main) {
 
       $scope.months=[1,2,3,4,5,6,7,8,9,10,11,12];
       $scope.years=[2014,2015,2016,2017,2018,2019,2020];
@@ -194,4 +268,57 @@ angular.module('cart', ['ngRoute'])
 
 
         }
+
+        $scope.signin = function() {
+            var formData = {
+                name: $scope.name,
+                password: $scope.password
+            }
+
+            Main.signin(formData, function(res) {
+                if (!res.success) {
+                    alert(res)
+                } else {
+                    $localStorage.token = res.token;
+                    $location.path('/products')
+                }
+            }, function() {
+                $rootScope.error = 'Failed to signin';
+            })
+        };
+
+        $scope.signup = function() {
+            var formData = {
+                name: $scope.name,
+                password: $scope.password
+            }
+
+            Main.save(formData, function(res) {
+                if (res.type == false) {
+                    alert(res.data)
+                } else {
+                    $localStorage.token = res.data.token;
+                    window.location = "/"
+                }
+            }, function() {
+                $rootScope.error = 'Failed to signup';
+            })
+        };
+
+        $scope.me = function() {
+            Main.me(function(res) {
+                $scope.myDetails = res;
+            }, function() {
+                $rootScope.error = 'Failed to fetch details';
+            })
+        };
+
+        $scope.logout = function() {
+            Main.logout(function() {
+                window.location = "/"
+            }, function() {
+                alert("Failed to logout!");
+            });
+        };
+        $scope.token = $localStorage.token;
 }]);

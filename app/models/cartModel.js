@@ -57,4 +57,12 @@ var customerSchema= new Schema({
     cart: [productQuantitySchema]
 });
 
-mongoose.model('Customer',customerSchema);
+mongoose.model('Customer',customerSchema)
+
+var userSchema = new Schema({
+    name:String,
+    password: String,
+    admin: Boolean
+})
+
+mongoose.model('User',userSchema)
