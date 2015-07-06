@@ -8,7 +8,7 @@ angular.module('cart', ['ngRoute','ngStorage'])
                 'request': function (config) {
                     config.headers = config.headers || {};
                     if ($localStorage.token) {
-                        config.headers.Authorization = 'Bearer ' + $localStorage.token;
+                        config.headers.Authorization =  $localStorage.token;
                     }
                     return config;
                 },
@@ -22,34 +22,48 @@ angular.module('cart', ['ngRoute','ngStorage'])
         }]);
 
   $routeProvider.when('/cart', {
-    templateUrl: '/static/cart.html',
-    controller: 'CartCtrl'
+    templateUrl: '/static/cart.html'
+
   }).when('/billing', {
-      templateUrl: '/static/billing.html',
-      controller: 'CartCtrl'
+      templateUrl: '/static/billing.html'
+
   }).when('/orders', {
-          templateUrl: '/static/orders.html',
-          controller: 'CartCtrl'
+          templateUrl: '/static/orders.html'
+
       })
       .when('/product', {
-          templateUrl: '/static/product.html',
-          controller: 'CartCtrl'
+          templateUrl: '/static/product.html'
+
       })
       .when('/products', {
           templateUrl: '/static/products.html',
-          controller: 'CartCtrl'
+          controller: function($scope,$http){
+            console.log("products ctrl calling");
+              $http.get('/products')
+               .success(function(data,status,headers,config){
+
+               $scope.products=data;
+               $scope.product=data[0];
+               })
+               .error(function(data,status,headers,config){
+               $scope.products=[];
+
+               })
+
+        }
+
       })
       .when('/review', {
-          templateUrl: '/static/review.html',
-          controller: 'CartCtrl'
+          templateUrl: '/static/review.html'
+
       })
       .when('/shipping', {
-          templateUrl: '/static/shipping.html',
-          controller: 'CartCtrl'
+          templateUrl: '/static/shipping.html'
+
       })
       .when('/login', {
-          templateUrl: '/static/login.html',
-          controller: 'CartCtrl'
+          templateUrl: '/static/login.html'
+
       })
 }])
     .factory('Main', ['$http', '$localStorage', function($http, $localStorage){
@@ -110,6 +124,7 @@ angular.module('cart', ['ngRoute','ngStorage'])
       $scope.months=[1,2,3,4,5,6,7,8,9,10,11,12];
       $scope.years=[2014,2015,2016,2017,2018,2019,2020];
         $scope.content = '/static/products.html';
+
       $http.get('/products')
           .success(function(data,status,headers,config){
 
@@ -139,7 +154,6 @@ angular.module('cart', ['ngRoute','ngStorage'])
             $scope.orders=[];
 
           })
-
         $scope.setContent=function(filename){
          //   $scope.content='/static/'+filename;
             $location.path('/'+filename)
@@ -268,11 +282,11 @@ angular.module('cart', ['ngRoute','ngStorage'])
 
 
         }
-
+        $scope.credentials={};
         $scope.signin = function() {
             var formData = {
-                name: $scope.name,
-                password: $scope.password
+                name: $scope.credentials.name,
+                password: $scope.credentials.password
             }
 
             Main.signin(formData, function(res) {
@@ -289,8 +303,8 @@ angular.module('cart', ['ngRoute','ngStorage'])
 
         $scope.signup = function() {
             var formData = {
-                name: $scope.name,
-                password: $scope.password
+                name: $scope.credentials.name,
+                password: $scope.credentials.password
             }
 
             Main.save(formData, function(res) {
