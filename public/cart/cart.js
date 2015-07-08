@@ -65,6 +65,10 @@ angular.module('cart', ['ngRoute','ngStorage'])
           templateUrl: '/static/login.html'
 
       })
+      .when('/signup', {
+          templateUrl: '/static/signup.html'
+
+      })
 }])
     .factory('Main', ['$http', '$localStorage', function($http, $localStorage){
         var baseUrl = "your_service_url";
@@ -103,7 +107,7 @@ angular.module('cart', ['ngRoute','ngStorage'])
 
         return {
             save: function(data, success, error) {
-                $http.post('/signin', data).success(success).error(error)
+                $http.post('/signup', data).success(success).error(error)
             },
             signin: function(data, success, error) {
                 $http.post('/authenticate', data).success(success).error(error)
@@ -304,6 +308,7 @@ angular.module('cart', ['ngRoute','ngStorage'])
         $scope.signup = function() {
             var formData = {
                 name: $scope.credentials.name,
+                email:$scope.credentials.email,
                 password: $scope.credentials.password
             }
 
@@ -312,7 +317,7 @@ angular.module('cart', ['ngRoute','ngStorage'])
                     alert(res.data)
                 } else {
                     $localStorage.token = res.data.token;
-                    window.location = "/"
+                    $location.path('/products')
                 }
             }, function() {
                 $rootScope.error = 'Failed to signup';

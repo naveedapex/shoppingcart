@@ -1,10 +1,11 @@
-<!DOCTYPE html>
-<html>
-<head lang="en">
-    <meta charset="UTF-8">
-    <title></title>
-</head>
-<body>
+<div class="login">
+    <form action="">
+        <input type="text" placeholder="Username" id="username" ng-model="credentials.name">
+        <input type="email" placeholder="email" id="email" ng-model="credentials.email">
+        <input type="password" placeholder="password" id="password" ng-model="credentials.password">
 
-</body>
-</html>
+        <input type="submit" value="Sign Up" ng-click="signup()">
+    </form>
+    {{credentials}}
+</div>
+<div class="shadow"></div>

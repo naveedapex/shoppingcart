@@ -51,18 +51,19 @@ var orderSchema = new Schema({
 mongoose.model('Order',orderSchema);
 
 var customerSchema= new Schema({
-    userid: {type: String, unique: true, required: true},
+    userid: {type: Schema.ObjectId, ref: 'User', unique: true, required: true},
     shipping: [addressSchema],
     billing: [billingSchema],
     cart: [productQuantitySchema]
 });
 
-mongoose.model('Customer',customerSchema)
+mongoose.model('Customer',customerSchema);
 
 var userSchema = new Schema({
     name:String,
+    email:String,
     password: String,
-    admin: Boolean
-})
+    token: String
+});
 
-mongoose.model('User',userSchema)
+mongoose.model('User',userSchema);

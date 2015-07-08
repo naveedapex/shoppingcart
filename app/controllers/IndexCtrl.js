@@ -1,12 +1,13 @@
 var mongoose=require('mongoose'),
     User=mongoose.model('User'),
+    Customer=mongoose.model('Customer'),
 jwt=require('jsonwebtoken'),
-    app = require('express')()
+    app = require('express')();
 
 exports.render = function(req, res) {
   //  var username=req.session&& req.session.currentUser? req.session.currentUser.username:null;
   //  res.render('index', {user:username});
-  console.log('../'+__dirname);
+
  res.sendfile('shopping.html',{'root':__dirname + '/../../public'});
  //res.send(200);
 };
@@ -58,7 +59,7 @@ exports.authenticate=function(req, res) {
 };
 exports.setup= function(req, res) {
 var body=req.body;
-    User.findOne({email: req.body.name, password: req.body.password}, function(err, user) {
+    User.findOne({email: req.body.email}, function(err, user) {
         if (err) {
             res.json({
                 type: false,
@@ -73,16 +74,30 @@ var body=req.body;
             } else {
                 var userModel = new User();
                 userModel.name = req.body.name;
+                userModel.email=req.body.email;
                 userModel.password = req.body.password;
                 userModel.save(function (err, user) {
                     user.token = jwt.sign(user, req.app.get('superSecret'));
                     user.save(function (err, user1) {
-                        res.json({
-                            type: true,
-                            data: user1,
-                            token: user1.token
+
+                        var customer=new Customer();
+                            customer.userid=user1._id;
+                            customer.cart=[];
+                            customer.shipping=[];
+                            customer.billing=[];
+                        customer.save(function(err,customer1){
+                            res.json({
+                                type: true,
+                                data: user1,
+                                token: user1.token
+                            });
                         });
-                    });
+
+
+                        });
+
+
+
                 })
             }
         }});

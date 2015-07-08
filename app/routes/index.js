@@ -32,7 +32,8 @@ var express=require('express');
     var apiRoutes = express.Router();
     apiRoutes.get('/',index.render);
     apiRoutes.post('/authenticate',index.authenticate)
-    apiRoutes.post('/setup',index.setup)
+    apiRoutes.post('/signup',index.setup)
+    apiRoutes.get('/customers',customers.getCustomer)
     apiRoutes.use(function(req, res, next) {
 
         // check header or url parameters or post parameters for token
@@ -66,7 +67,7 @@ var express=require('express');
     apiRoutes.get('/products',products.getProducts)
     apiRoutes.get('/orders',orders.getOrders);
     apiRoutes.post('/orders',orders.addOrder);
-    apiRoutes.get('/customers',customers.getCustomer)
+
     apiRoutes.get('/fill', customers.fillProducts)
     apiRoutes.post('/customers/update/shipping',customers.updateShipping);
     apiRoutes.post('/customers/update/billing',customers.updateBilling);
