@@ -19,7 +19,10 @@ var express=require('express');
         products= require('../controllers/productsCtrl'),
         orders=require('../controllers/ordersCtrl'),
         customers=require('../controllers/customerCtrl'),
-    jwt=require('jsonwebtoken');
+    jwt=require('jsonwebtoken'),
+        mongoose=require('mongoose'),
+        User=mongoose.model('User');
+
   /*  appg.et('/products',products.getProducts)
     app.get('/orders',orders.getOrders);
     app.post('/orders',orders.addOrder);
@@ -33,7 +36,7 @@ var express=require('express');
     apiRoutes.get('/',index.render);
     apiRoutes.post('/authenticate',index.authenticate)
     apiRoutes.post('/signup',index.setup)
-    apiRoutes.get('/customers',customers.getCustomer)
+
     apiRoutes.use(function(req, res, next) {
 
         // check header or url parameters or post parameters for token
@@ -48,7 +51,7 @@ var express=require('express');
                     return res.json({ success: false, message: 'Failed to authenticate token.' });
                 } else {
                     // if everything is good, save to request for use in other routes
-                    req.decoded = decoded;
+                    req.token = decoded.token;
                     next();
                 }
             });
@@ -58,17 +61,19 @@ var express=require('express');
             // if there is no token
             // return an error
             return res.status(403).send({
-                success: false,
+                type: false,
                 message: 'No token provided.'
             });
 
         }
     });
-    apiRoutes.get('/products',products.getProducts)
+    apiRoutes.get('/customers',customers.getCustomer)
+    apiRoutes.get('/me', index.me);
+    apiRoutes.get('/products',products.getProducts);
     apiRoutes.get('/orders',orders.getOrders);
     apiRoutes.post('/orders',orders.addOrder);
 
-    apiRoutes.get('/fill', customers.fillProducts)
+    apiRoutes.get('/fill', customers.fillProducts);
     apiRoutes.post('/customers/update/shipping',customers.updateShipping);
     apiRoutes.post('/customers/update/billing',customers.updateBilling);
     apiRoutes.post('/customers/update/cart',customers.updateCart);

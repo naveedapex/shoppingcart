@@ -11,6 +11,16 @@ angular.module('cart', ['ngRoute','ngStorage'])
                         config.headers.Authorization =  $localStorage.token;
                     }
                     return config;
+                }, response: function (response) {
+
+                    if (response.status === 401) {
+
+                        console.log("Response 401");
+
+                    }
+
+                    return response || $q.when(response);
+
                 },
                 'responseError': function(response) {
                     if(response.status === 401 || response.status === 403) {
@@ -19,7 +29,8 @@ angular.module('cart', ['ngRoute','ngStorage'])
                     return $q.reject(response);
                 }
             };
-        }]);
+        }])
+
 
   $routeProvider.when('/cart', {
     templateUrl: '/static/cart.html'
@@ -37,7 +48,7 @@ angular.module('cart', ['ngRoute','ngStorage'])
       })
       .when('/products', {
           templateUrl: '/static/products.html',
-          controller: function($scope,$http){
+          controller: function($scope,Main,$http){
             console.log("products ctrl calling");
               $http.get('/products')
                .success(function(data,status,headers,config){
@@ -49,7 +60,17 @@ angular.module('cart', ['ngRoute','ngStorage'])
                $scope.products=[];
 
                })
+              console.log("calling in products");
 
+              $http.get('/customers')
+                  .success(function(data,status,headers,config){
+                      $scope.customer=data;
+
+                  })
+                  .error(function(data,status,headers,config){
+                      $scope.customer=[];
+
+                  })
         }
 
       })
@@ -63,14 +84,34 @@ angular.module('cart', ['ngRoute','ngStorage'])
       })
       .when('/login', {
           templateUrl: '/static/login.html'
-
       })
       .when('/signup', {
           templateUrl: '/static/signup.html'
 
       })
-}])
-    .factory('Main', ['$http', '$localStorage', function($http, $localStorage){
+}]).
+run(['$rootScope', '$location','Main',
+    function ($rootScope, $location,Main) {
+console.log("run");
+        //Client-side security. Server-side framework MUST add it's
+        //own security as well since client-based “security” is easily hacked
+        $rootScope.$on('$routeChangeStart', function (event, next, current) {
+            if (next && next.$$route && next.$$route.regexp.test('/login')) {
+                Main.isAuthenticated(function(auth){
+
+                    if(auth.type)
+                        $location.path('/products');
+                    else
+                        $location.path('/login');
+
+                });
+
+
+            }
+            //Look at the next parameter value to determine if a redirect is needed
+        });
+
+    }]).factory('Main', ['$http', '$localStorage','$q', function($http, $localStorage,$q){
         var baseUrl = "your_service_url";
         function changeUser(user) {
             angular.extend(currentUser, user);
@@ -119,6 +160,16 @@ angular.module('cart', ['ngRoute','ngStorage'])
           //      changeUser({});
                 delete $localStorage.token;
                 success();
+            },
+            isAuthenticated: function(cb){
+
+                $http.get('/me').success(function(res){
+                   cb(res)
+                }).error(function(err){
+
+                  cb(err)
+                })
+
             }
         };
     }

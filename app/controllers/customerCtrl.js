@@ -4,9 +4,10 @@ var mongoose=require('mongoose'),
     Customer=mongoose.model('Customer'),
     Address=mongoose.model('Address'),
     Billing=mongoose.model('Billing'),
- Product = mongoose.model('Product');
- ProductQuantity = mongoose.model('ProductQuantity');
-
+    User=mongoose.model('User'),
+    Product = mongoose.model('Product');
+    ProductQuantity = mongoose.model('ProductQuantity');
+var ObjectId = mongoose.Types.ObjectId;
 function addProduct(customer, order, name, imagefile,
                     price, description, instock){
     var product = new Product({name:name, imageFile:imagefile,
@@ -79,73 +80,112 @@ exports.fillProducts=function(req, res){
 }
 
 exports.getCustomer=function(req, res){
-    Customer.findOne({userid:'customerA'}).
-        exec(function(err,customer){
-            if(!customer){
-                res.json(404,{msg: 'Customer not found'});
-            }
-            else
-            {
-                res.json(customer);
 
-            }
-        })
+    User.findOne({token: req.token}, function(err, user) {
+        if (err) {
+            res.json({
+                type: false,
+                data: "Error occured: " + err
+            });
+        } else {
+            Customer.findOne({userid: new ObjectId(user._id)}).
+                exec(function (err, customer) {
+                    if (!customer) {
+                        res.json(404, {msg: 'Customer not found'});
+                    }
+                    else {
+                        res.json(customer);
 
+                    }
+                })
+        }
+    })
 }
 
 
 exports.updateShipping=function(req,res){
     var newShipping=new Address(req.body.updatedShipping);
+    User.findOne({token: req.token}, function(err, user) {
+        if (err) {
+            res.json({
+                type: false,
+                data: "Error occured: " + err
+            });
+        } else {
 
-    Customer.update({userid:'customerA'},{$set:{shipping:[ newShipping.toObject()]}})
-        .exec(function(err,results){
-            if(err || results < 1){
-                res.json(404,{msg: 'Failed to update Shipping'})
-            }
-            else
-            {
-                res.json({msg:'Customer Shipping updated'})
+            Customer.update({userid:new ObjectId(user._id)},{$set:{shipping:[ newShipping.toObject()]}})
+                .exec(function(err,results){
+                    if(err || results < 1){
+                        res.json(404,{msg: 'Failed to update Shipping'})
+                    }
+                    else
+                    {
+                        res.json({msg:'Customer Shipping updated'})
 
-            }
+                    }
 
 
-        })
+                })
+        }
+    })
+
 }
 
 exports.updateBilling=function(req,res){
 
     var newBilling=new Billing(req.body.updatedBilling);
+    User.findOne({token: req.token}, function(err, user) {
+        if (err) {
+            res.json({
+                type: false,
+                data: "Error occured: " + err
+            });
+        } else {
 
-    Customer.update({userid:'customerA'},{$set:{billing:[newBilling.toObject()]}})
-        .exec(function(err, results){
-            if(err || results<1){
+            Customer.update({userid:new ObjectId(user._id)},{$set:{billing:[newBilling.toObject()]}})
+                .exec(function(err, results){
+                    if(err || results<1){
 
-                res.json(404,{msg: 'failed to update Billing'});
-            }
-            else
-            {
-                res.json({msg: 'Customer Billing Updated'});
-            }
+                        res.json(404,{msg: 'failed to update Billing'});
+                    }
+                    else
+                    {
+                        res.json({msg: 'Customer Billing Updated'});
+                    }
 
-       })
+                })
+        }
+    })
+
 }
 
 exports.updateCart=function(req,res){
-    Customer.update({userid:'customerA'},{$set:{cart:req.body.updatedCart}})
-        .exec(function(err,results){
-            if(err || results<1){
+    User.findOne({token: req.token}, function(err, user) {
+        if (err) {
+            res.json({
+                type: false,
+                data: "Error occured: " + err
+            });
+        } else {
+            Customer.update({userid:new ObjectId(user._id)},{$set:{cart:req.body.updatedCart}})
+                .exec(function(err,results){
+                    if(err || results<1){
 
-                res.json(404,{msg:'Failed to update cart.'})
+                        res.json(404,{msg:'Failed to update cart.'})
 
 
-            }
-            else
-            {
-                res.json({msg:'Failed to update cart.'})
+                    }
+                    else
+                    {
+                        res.json({msg:'Failed to update cart.'})
 
-            }
+                    }
 
-        })
+                })
+        }
+    })
+
+
 
 
 }

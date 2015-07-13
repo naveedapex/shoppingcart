@@ -20,6 +20,24 @@ res.json(users);
 })
 
 };
+
+exports.me=function(req,res){
+
+    User.findOne({token: req.token}, function(err, user) {
+        if (err) {
+            res.json({
+                type: false,
+                data: "Error occured: " + err
+            });
+        } else {
+            res.json({
+                type: true,
+                data: user
+            });
+        }
+    });
+
+};
 exports.authenticate=function(req, res) {
 
     // find the user
@@ -101,6 +119,8 @@ var body=req.body;
                 })
             }
         }});
+
+
     // create a sample user
    /* var nick = new User({
         name: body.name,
