@@ -158,6 +158,7 @@ console.log("run");
             },
             logout: function(success) {
           //      changeUser({});
+                var local=$localStorage.token;
                 delete $localStorage.token;
                 success();
             },
@@ -385,10 +386,16 @@ console.log("run");
 
         $scope.logout = function() {
             Main.logout(function() {
-                window.location = "/"
+                var aa=$scope.$storage;
+                delete $scope.$storage.x;
+
+            $location.path("/");
             }, function() {
                 alert("Failed to logout!");
             });
         };
-        $scope.token = $localStorage.token;
+        $scope.$storage=$localStorage.$default({
+            x: 42
+        });
+        $scope.$storage.token = $localStorage.token;
 }]);

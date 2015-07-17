@@ -9,13 +9,14 @@
 <div ng-controller="CartCtrl">
     <div id="banner">
         <div id="title">My Store</div>
-        <div id="bar">
+        <div id="bar" ng-show="$storage.token">
         <span class="orders"
               ng-click="setContent('orders')">Orders</span>
         <span id="cartLink" ng-click="setContent('cart')">
             {{customer.cart.length}} items
             <img src="/images/cart.png" />
-        </span>
+        </span><span class="orders"
+                     ng-click="logout()">Logout</span>
         </div>
     </div>
     <div id="main">

@@ -2,7 +2,9 @@ var mongoose=require('mongoose'),
     User=mongoose.model('User'),
     Customer=mongoose.model('Customer'),
 jwt=require('jsonwebtoken'),
-    app = require('express')();
+    app = require('express')(),
+    hash = require('../../config/pass').hash;
+
 
 exports.render = function(req, res) {
   //  var username=req.session&& req.session.currentUser? req.session.currentUser.username:null;
