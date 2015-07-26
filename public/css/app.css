@@ -155,7 +155,7 @@ input[type="checkbox"]:checked + .toggle { background-position: 0 -16px }
   transition: color .4s;
 }
 .forgot:hover { color: #3b3b3b }
-input[type="submit"] {
+input[type="button"] {
   width:240px;
   height:35px;
   display:block;
@@ -192,7 +192,17 @@ input[type="submit"] {
 }
 
 
-input[type="submit"]:active {
+input[type="button"]:active {
   top:3px;
   box-shadow: inset 0px 1px 0px #2ab7ec, 0px 2px 0px 0px #31524d, 0px 5px 3px #999;
+}
+
+.showcenter {
+
+  width: 50%;
+  margin: 0 auto;
+  }
+.padtop {
+  padding-top:10px;
+
 }

@@ -1,11 +1,15 @@
 <!DOCTYPE html>
 <html >
 <head>
+    <base href="/">
+
     <title>Shopping Cart</title>
+   <!-- <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootswatch/3.3.4/cerulean/bootstrap.min.css">-->
+
     <link rel="stylesheet" type="text/css"
           href="../css/app.css" />
 </head>
-<body ng-app="shoppingCart">
+<body ng-app="cart">
 <div ng-controller="CartCtrl">
     <div id="banner">
         <div id="title">My Store</div>
@@ -19,18 +23,20 @@
                      ng-click="logout()">Logout</span>
         </div>
     </div>
-    <div id="main">
+    <div id="main">      n n
         <!--<div ng-include="content"></div>-->
         <ng-view></ng-view>
 
     </div>
 </div>
 
-<script type="text/javascript" src="/script/angular.js"></script>
-<script type="text/javascript" src="/script/angular-route.js"></script>
+<script type="text/javascript" src="https://cdnjs.cloudflare.com/ajax/libs/angular.js/1.4.2/angular.js"></script>
+<script type="text/javascript" src="https://cdnjs.cloudflare.com/ajax/libs/angular.js/1.4.2/angular-route.js"></script>
 <script src="https://cdn.jsdelivr.net/ngstorage/0.3.6/ngStorage.min.js"></script>
+<script src="//ajax.googleapis.com/ajax/libs/angularjs/1.4.0/angular-messages.js"></script>
+
 <script src="/cart/cart.js"></script>
-<script src="/checkout/checkout.js"></script>
-<script src="/app.js"></script>
+<!--<script src="/checkout/checkout.js"></script>-->
+<!--<script src="/app.js"></script>-->
 </body>
 </html>

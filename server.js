@@ -15,7 +15,8 @@ var express = require('express'),
   fs=require('fs'),
   path = require('path');
 var mongoose=require('mongoose');
-mongoose.connect('mongodb://localhost/cart');
+//mongoose.connect('mongodb://localhost/cart');
+mongoose.connect('mongodb://naveedjb:12345@ds047792.mongolab.com:47792/cart');
 
 var app = express();
 

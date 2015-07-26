@@ -63,6 +63,8 @@ var userSchema = new Schema({
     name:String,
     email:String,
     password: String,
+    salt: String,
+    hash: String,
     token: String
 });
 

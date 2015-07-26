@@ -23,7 +23,7 @@ var express=require('express');
         mongoose=require('mongoose'),
         User=mongoose.model('User');
 
-  /*  appg.et('/products',products.getProducts)
+ /*   app.get('/products',products.getProducts)
     app.get('/orders',orders.getOrders);
     app.post('/orders',orders.addOrder);
     app.get('/customers',customers.getCustomer)
@@ -36,7 +36,7 @@ var express=require('express');
     apiRoutes.get('/',index.render);
     apiRoutes.post('/authenticate',index.authenticate)
     apiRoutes.post('/signup',index.setup)
-
+    apiRoutes.get('/fill', customers.fillProducts);
     apiRoutes.use(function(req, res, next) {
 
         // check header or url parameters or post parameters for token
@@ -51,7 +51,7 @@ var express=require('express');
                     return res.json({ success: false, message: 'Failed to authenticate token.' });
                 } else {
                     // if everything is good, save to request for use in other routes
-                    req.token = decoded.token;
+                    req.token = decoded.token || token;
                     next();
                 }
             });
@@ -73,7 +73,7 @@ var express=require('express');
     apiRoutes.get('/orders',orders.getOrders);
     apiRoutes.post('/orders',orders.addOrder);
 
-    apiRoutes.get('/fill', customers.fillProducts);
+
     apiRoutes.post('/customers/update/shipping',customers.updateShipping);
     apiRoutes.post('/customers/update/billing',customers.updateBilling);
     apiRoutes.post('/customers/update/cart',customers.updateCart);

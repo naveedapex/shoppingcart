@@ -1,8 +1,11 @@
 'use strict';
 
-angular.module('cart', ['ngRoute','ngStorage'])
+angular.module('cart', ['ngRoute','ngStorage','ngMessages'])
 
-.config(['$routeProvider','$httpProvider', function($routeProvider,$httpProvider) {
+.config(['$routeProvider','$httpProvider','$locationProvider', function($routeProvider,$httpProvider,$locationProvider) {
+       /* $locationProvider.html5Mode(true);
+        $locationProvider.hashPrefix('!');*//**/
+
         $httpProvider.interceptors.push(['$q', '$location', '$localStorage', function($q, $location, $localStorage) {
             return {
                 'request': function (config) {
@@ -33,7 +36,21 @@ angular.module('cart', ['ngRoute','ngStorage'])
 
 
   $routeProvider.when('/cart', {
-    templateUrl: '/static/cart.html'
+    templateUrl: '/static/cart.html',
+      controller:function($scope,Main){
+          $scope.customer=Main.customer()
+
+          $scope.cartTotal=function(){
+              var total=0;
+              for(var i=0; i<Main.customer().cart.length;i++){
+                  var item= Main.customer().cart[i];
+                  total +=item.quantity * item.product[0].price;
+
+              }
+              $scope.shipping=total*0.05;
+              return total+$scope.shipping;
+          }
+      }
 
   }).when('/billing', {
       templateUrl: '/static/billing.html'
@@ -43,7 +60,43 @@ angular.module('cart', ['ngRoute','ngStorage'])
 
       })
       .when('/product', {
-          templateUrl: '/static/product.html'
+          templateUrl: '/static/product.html',
+          controller: function($scope,$http,$location,Main){
+              Main.fetchCustomer();
+              /*$http.get('/customers')
+                  .success(function(data,status,headers,config){
+                      $scope.customer=data;
+
+                  })
+                  .error(function(data,status,headers,config){
+                      $scope.customer=[];
+
+                  })*/
+              $scope.addToCart=function(productId){
+                  var found=false;
+                  for(var i=0;i<Main.customer().cart.length;i++){
+                      var item= Main.customer().cart[i];
+                      if(item.product[0]._id==productId){
+                          item.quantity +=1;
+                          found=true;
+                      }
+                  }
+                  if(!found){
+                      Main.customer().cart.push({quantity:1, product:[this.product]})
+
+                  }
+                  $http.post('/customers/update/cart',{updatedCart:Main.customer().cart})
+                      .success(function(data,status,headers,config){
+                          $scope.content='/static/cart.html'
+                          $location.path('/cart')
+                      })
+                      .error(function(data,status,headers,config){
+                          $window.alert(data);
+                      })
+              }
+
+
+          }
 
       })
       .when('/products', {
@@ -62,15 +115,10 @@ angular.module('cart', ['ngRoute','ngStorage'])
                })
               console.log("calling in products");
 
-              $http.get('/customers')
-                  .success(function(data,status,headers,config){
-                      $scope.customer=data;
 
-                  })
-                  .error(function(data,status,headers,config){
-                      $scope.customer=[];
 
-                  })
+
+				  
         }
 
       })
@@ -88,7 +136,10 @@ angular.module('cart', ['ngRoute','ngStorage'])
       .when('/signup', {
           templateUrl: '/static/signup.html'
 
-      })
+      }).otherwise({
+          redirectTo: '/login'
+      });
+
 }]).
 run(['$rootScope', '$location','Main',
     function ($rootScope, $location,Main) {
@@ -113,6 +164,7 @@ console.log("run");
 
     }]).factory('Main', ['$http', '$localStorage','$q', function($http, $localStorage,$q){
         var baseUrl = "your_service_url";
+        var customer=null;
         function changeUser(user) {
             angular.extend(currentUser, user);
         }
@@ -148,13 +200,20 @@ console.log("run");
 
         return {
             save: function(data, success, error) {
-                $http.post('/signup', data).success(success).error(error)
+                $http.post('/signup', data)
+                    .success(success)
+                    .error(error)
             },
             signin: function(data, success, error) {
-                $http.post('/authenticate', data).success(success).error(error)
+                $http.post('/authenticate', data)
+                    .success(success)
+                    .error(error)
+
             },
             me: function(success, error) {
-                $http.get('/me').success(success).error(error)
+                $http.get('/me')
+                    .success(success)
+                    .error(error)
             },
             logout: function(success) {
           //      changeUser({});
@@ -171,7 +230,26 @@ console.log("run");
                   cb(err)
                 })
 
+            },
+            fetchCustomer: function(){
+
+                $http.get('/customers')
+                    .success(function(data,status,headers,config){
+                        customer=data;
+
+                    })
+                    .error(function(data,status,headers,config){
+                        customer=[];
+
+                    })
+
+            },
+            customer: function(){
+
+             return customer;
+
             }
+
         };
     }
     ])
@@ -181,7 +259,7 @@ console.log("run");
       $scope.years=[2014,2015,2016,2017,2018,2019,2020];
         $scope.content = '/static/products.html';
 
-      $http.get('/products')
+ /*     $http.get('/products')
           .success(function(data,status,headers,config){
 
             $scope.products=data;
@@ -209,7 +287,7 @@ console.log("run");
           .error(function(data,status,headers,config){
             $scope.orders=[];
 
-          })
+          })*/
         $scope.setContent=function(filename){
          //   $scope.content='/static/'+filename;
             $location.path('/'+filename)
@@ -221,7 +299,7 @@ console.log("run");
           //  $scope.content = '/static/product.html';
         }
 
-        $scope.cartTotal=function(){
+        /*$scope.cartTotal=function(){
             var total=0;
             for(var i=0; i<$scope.customer.cart.length;i++){
                 var item= $scope.customer.cart[i];
@@ -230,9 +308,9 @@ console.log("run");
             }
             $scope.shipping=total*0.05;
             return total+$scope.shipping;
-        }
+        }*/
 
-        $scope.addToCart=function(productId){
+      /* $scope.addToCart=function(productId){
             var found=false;
             for(var i=0;i<$scope.customer.cart.length;i++){
                 var item= $scope.customer.cart[i];
@@ -253,10 +331,10 @@ console.log("run");
                 .error(function(data,status,headers,config){
                $window.alert(data);
                 })
-        }
+        }*/
 
         $scope.deleteFromCart=function(productId){
-
+            $scope.customer=Main.customer()
             for(var i=0;$scope.customer.cart.length;i++){
                 var item= $scope.customer.cart[i];
                 if(item.product[0]._id==productId){
@@ -275,6 +353,7 @@ console.log("run");
         }
 
         $scope.checkout=function(){
+            $scope.customer=Main.customer()
             $http.post('/customers/update/cart',{updatedCart:$scope.customer.cart})
                 .success(function(data,status,headers,config){
                   //  $scope.content='/static/shipping.html'
@@ -288,6 +367,7 @@ console.log("run");
         }
 
         $scope.setShipping=function(){
+            $scope.customer=Main.customer()
             $http.post('/customers/update/shipping',{updatedShipping:$scope.customer.shipping[0]})
                 .success(function(data,status,headers,config){
                 //    $scope.content='/static/billing.html'
@@ -300,6 +380,7 @@ console.log("run");
 
         $scope.verifyBilling=function(ccv){
             $scope.ccv=ccv;
+            $scope.customer=Main.customer()
 
             $http.post('/customers/update/billing',{updatedCart:$scope.customer.shipping[0], ccv:ccv})
                 .success(function(data,status,headers,config){
@@ -315,7 +396,7 @@ console.log("run");
 
 
         $scope.makePurchase=function(){
-
+            $scope.customer=Main.customer()
             $http.post('/orders',
                 {orderBilling:$scope.customer.billing[0],
                     orderShipping:$scope.customer.shipping[0],
@@ -339,24 +420,37 @@ console.log("run");
 
         }
         $scope.credentials={};
+        console.log("ctrl calling");
+		
+		if($scope.myForm)
+		{
+		if(myForm.name.$$touched)
+			$scope.loginerror="";
+		}
         $scope.signin = function() {
+            if($scope.$$childHead.myForm)
+		{
+		$scope.myForm=$scope.$$childHead.myForm;
+		}
             var formData = {
                 name: $scope.credentials.name,
                 password: $scope.credentials.password
             }
+            // console.log($scope.myForm);
 
-            Main.signin(formData, function(res) {
+            Main.signin(formData, function(res,status,headers,config) {
+                console.log(res);
                 if (!res.success) {
-                    alert(res)
+                    $scope.loginerror = "username/password is incorrect"
                 } else {
                     $localStorage.token = res.token;
-                    $location.path('/products')
+                    $location.path('#/products')
                 }
-            }, function() {
-                $rootScope.error = 'Failed to signin';
+            }, function(data,status,headers,config) {
+                $scope.loginerror = true
             })
         };
-
+        console.log($scope.myForm);
         $scope.signup = function() {
             var formData = {
                 name: $scope.credentials.name,
