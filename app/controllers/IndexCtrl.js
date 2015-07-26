@@ -41,10 +41,10 @@ exports.me=function(req,res){
 
 };
 exports.authenticate=function(req, res) {
-  var  pass=req.body.password
+  var  pass=req.body.password;
     // find the user
     User.findOne({
-        name: req.body.name
+        email: req.body.email
     }, function(err, user) {
 
         if (err) throw err;

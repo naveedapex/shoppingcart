@@ -1,10 +1,18 @@
 <div class="login">
-    <form action="">
-        <input type="text" placeholder="Username" id="username" ng-model="credentials.name">
-        <input type="email" placeholder="email" id="email" ng-model="credentials.email">
-        <input type="password" placeholder="password" id="password" ng-model="credentials.password">
-
-        <input type="button" value="Sign Up" ng-click="signup()">
+    <form name="myForm" novalidate>
+        <input type="text" placeholder="Username" id="username" name="name" ng-model="data.name">
+        <div ng-messages="myForm.name.$error" class="showcenter" ng-if="myForm.password.$touched">
+            <div ng-messages-include="/static/messages.html"></div>
+        </div>
+        <input type="email" placeholder="email" id="email" email="email" ng-model="data.email">
+        <div ng-messages="myForm.email.$error" class="showcenter" ng-if="myForm.password.$touched">
+            <div ng-messages-include="/static/messages.html"></div>
+        </div>
+        <input type="password" placeholder="password" id="password" name="password" ng-model="data.password">
+        <div ng-messages="myForm.password.$error" class="showcenter" ng-if="myForm.password.$touched">
+            <div ng-messages-include="/static/messages.html"></div>
+        </div>
+        <input type="button" value="Sign Up" ng-click="signup()" ng-disabled="myForm.$invalid">
     </form>
     {{credentials}}
 </div>

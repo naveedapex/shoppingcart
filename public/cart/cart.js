@@ -420,6 +420,7 @@ console.log("run");
 
         }
         $scope.credentials={};
+        $scope.data={};
         console.log("ctrl calling");
 		
 		if($scope.myForm)
@@ -433,7 +434,7 @@ console.log("run");
 		$scope.myForm=$scope.$$childHead.myForm;
 		}
             var formData = {
-                name: $scope.credentials.name,
+                email: $scope.credentials.email,
                 password: $scope.credentials.password
             }
             // console.log($scope.myForm);
