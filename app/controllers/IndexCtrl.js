@@ -149,21 +149,31 @@ var body=req.body,
                 })
 
             }
-        }});
-
-
-    // create a sample user
-   /* var nick = new User({
-        name: body.name,
-        password: body.password,
-        admin: true
-    });
-
-    // save the sample user
-    nick.save(function(err) {
-        if (err) throw err;
-
-        console.log('User saved successfully');
-        res.json({ success: true });
-    });*/
+        }})
 };
+
+exports.checkuser=function(req, res) {
+
+    User.findOne({email: req.body.email}, function(err, user) {
+        if (err) {
+            res.json({
+                type: false,
+                msg: "Error occured: " + err
+            });
+        } else {
+            if (user) {
+                res.json({
+                    type: false,
+                    msg: "User already exists!"
+                });
+            }
+        else
+            {
+                res.json({
+                    type: true,
+                    msg: "No User Found!"
+                });
+
+            }
+
+        }})}

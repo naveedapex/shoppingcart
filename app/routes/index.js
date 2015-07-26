@@ -37,6 +37,7 @@ var express=require('express');
     apiRoutes.post('/authenticate',index.authenticate)
     apiRoutes.post('/signup',index.setup)
     apiRoutes.get('/fill', customers.fillProducts);
+    apiRoutes.post('/checkuser',index.checkuser)
     apiRoutes.use(function(req, res, next) {
 
         // check header or url parameters or post parameters for token

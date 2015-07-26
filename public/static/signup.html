@@ -1,19 +1,25 @@
 <div class="login">
     <form name="myForm" novalidate>
-        <input type="text" placeholder="Username" id="username" name="name" ng-model="data.name">
-        <div ng-messages="myForm.name.$error" class="showcenter" ng-if="myForm.password.$touched">
+        <input type="text" placeholder="Username" id="username" name="name" ng-model="data.name" required>
+        <div ng-messages="myForm.name.$error" class="showcenter" ng-if="myForm.name.$touched">
             <div ng-messages-include="/static/messages.html"></div>
         </div>
-        <input type="email" placeholder="email" id="email" email="email" ng-model="data.email">
-        <div ng-messages="myForm.email.$error" class="showcenter" ng-if="myForm.password.$touched">
+
+
+        <input type="email" placeholder="email" id="email" name="email" ng-model="data.email" username-validator required>
+        <div ng-messages="myForm.email.$error" class="showcenter" ng-if="myForm.email.$touched">
             <div ng-messages-include="/static/messages.html"></div>
         </div>
-        <input type="password" placeholder="password" id="password" name="password" ng-model="data.password">
+
+        <div ng-messages="myForm.email.$pending" class="validation-pending">
+            <div ng-message="username">Checking username availability...</div>
+        </div>
+        <input type="password" placeholder="password" id="password" name="password" ng-model="data.password" required>
         <div ng-messages="myForm.password.$error" class="showcenter" ng-if="myForm.password.$touched">
             <div ng-messages-include="/static/messages.html"></div>
         </div>
         <input type="button" value="Sign Up" ng-click="signup()" ng-disabled="myForm.$invalid">
     </form>
-    {{credentials}}
+
 </div>
 <div class="shadow"></div>
