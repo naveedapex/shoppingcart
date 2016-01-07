@@ -1,60 +1,22 @@
 <div class="login">
-<!--    <form name="userForm" novalidate>
-
-        <div  ng-class="{ 'has-error': userForm.name.$touched && userForm.name.$invalid }">
-            <label>Name</label>
-            <input type="text" name="name" class="form-control"
-                   ng-model="main.name"
-                   ng-minlength="5"
-                   ng-maxlength="10"
-                   required>
-
-            <div  ng-messages="userForm.name.$error" >
-                <p ng-message="minlength">Your name is too short.</p>
-                <p ng-message="maxlength">Your name is too long.</p>
-                <p ng-message="required">Your name is required.</p>
-            </div>
-        </div>
-
-        <div  ng-class="{ 'has-error': userForm.email.$touched && userForm.email.$invalid }">
-            <label>Email</label>
-            <input type="email" name="email"
-                   ng-model="main.email"
-                   ng-minlength="5"
-                   ng-maxlength="20"
-                   required>
-
-            <div  ng-messages="userForm.email.$error" ng-if="userForm.email.$touched">
-                <div ng-messages-include="messages.html"></div>
-            </div>
-
-        </div>
-
-        <div >
-            <button type="submit" class="btn btn-danger">Submit</button>
-        </div>
-
-    </form>-->
 
     <form name="myForm" novalidate >
-    <input type="email" name="name" placeholder="email" id="username" ng-model="credentials.email"  required>
-<!--<span style="color:red" ng-show=" myForm.name.$invalid && !myForm.name.$pristine ">
-<span >Username is required.</span>
-</span>-->
+    <input type="email" name="name" placeholder="email" id="username" ng-model="main.credentials.email"  required>
+
 
         <div ng-messages="myForm.name.$error" ng-if="myForm.name.$touched" style=" width: 50%;margin: 0 auto;">
             <div ng-messages-include="/static/messages.html"></div>
         </div>
 
 
-    <input type="password" name="password" placeholder="password" id="password" ng-model="credentials.password" required>
+    <input type="password" name="password" placeholder="password" id="password" ng-model="main.credentials.password" required>
         <div ng-messages="myForm.password.$error" class="showcenter" ng-if="myForm.password.$touched">
             <div ng-messages-include="/static/messages.html"></div>
         </div>
 
-    <input type="button" value="Sign In" ng-click="signin()" ng-disabled="myForm.$invalid">
+    <input type="button" value="Sign In" ng-click="main.signin()" ng-disabled="myForm.$invalid">
         <div class="showcenter padtop">
-            {{loginerror}}
+            {{main.loginerror}}
         </div>
     </form>
     <a href="#/signup" class="forgot">Sign up</a>

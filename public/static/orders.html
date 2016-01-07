@@ -1,11 +1,11 @@
 <div id="reviewContainer">
-    <div class="listItem" ng-repeat="order in orders">
+    <div class="listItem" ng-repeat="order in main.orders">
         <p class="itemTitle">Order #{{$index+1}}</p>
         <p class="prodDesc">Placed {{order.timestamp|date}}</p>
         <p class="status">{{order.status}}</p>
         <div class="listItem" ng-repeat="item in order.items"
              ng-init="product=item.product[0]">
-            <img class="listImg" ng-click="setProduct(product._id)"
+            <img class="listImg" ng-click="main.setProduct(product._id)"
                  ng-src="../images/{{product.imagefile}}" />
             <span class="prodName">{{product.name}}</span>
 	    <span >
@@ -16,7 +16,7 @@
         </div>
     </div>
     <div>
-    <span class="button" ng-click="setContent('products.html')">
+    <span class="button" ng-click="main.setContent('products.html')">
       Continue Shopping
     </span>
     </div>

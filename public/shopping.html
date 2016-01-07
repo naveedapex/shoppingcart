@@ -10,20 +10,20 @@
           href="../css/app.css" />
 </head>
 <body ng-app="cart">
-<div ng-controller="CartCtrl">
+<div ng-controller="CartCtrl as main">
     <div id="banner">
         <div id="title">My Store</div>
-        <div id="bar" ng-show="$storage.token">
+        <div id="bar" ng-show="main.$storage.token">
         <span class="orders"
-              ng-click="setContent('orders')">Orders</span>
-        <span id="cartLink" ng-click="setContent('cart')">
-            {{customer.cart.length}} items
+              ng-click="main.setContent('orders')">Orders</span>
+        <span id="cartLink" ng-click="main.setContent('cart')">
+            {{main.customer.cart.length}} items
             <img src="/images/cart.png" />
         </span><span class="orders"
-                     ng-click="logout()">Logout</span>
+                     ng-click="main.logout()">Logout</span>
         </div>
     </div>
-    <div id="main">      n n
+    <div id="main">
         <!--<div ng-include="content"></div>-->
         <ng-view></ng-view>
 
@@ -34,8 +34,12 @@
 <script type="text/javascript" src="https://cdnjs.cloudflare.com/ajax/libs/angular.js/1.4.2/angular-route.js"></script>
 <script src="https://cdn.jsdelivr.net/ngstorage/0.3.6/ngStorage.min.js"></script>
 <script src="//ajax.googleapis.com/ajax/libs/angularjs/1.4.0/angular-messages.js"></script>
+<script type="text/javascript" src="/script/detect-zoom.js"></script>
 
 <script src="/cart/cart.js"></script>
+<script src="/cart/services.js"></script>
+<script src="/cart/directive.js"></script>
+<script src="/cart/controllers.js"></script>
 <!--<script src="/checkout/checkout.js"></script>-->
 <!--<script src="/app.js"></script>-->
 </body>

@@ -1,7 +1,7 @@
 <div id="productsContainer">
 
-    <div class="listItem" ng-repeat="product in products">
-        <img class="listImg" ng-click="setProduct(product._id)"
+    <div class="listItem" ng-repeat="product in productsctrl.products">
+        <img class="listImg" ng-click="main.setProduct(product)"
              ng-src="../images/{{product.imageFile}}" />
         {{product.imagefile}}
         <span class="prodName">{{product.name}}</span>
